@@ -80,7 +80,8 @@ function processSites(sessions){
 
 	//Run through the sessions and bukcet them in sites
 	for(var i = 0; i < sessions.length; i++){
-		if(var index = sites.indexOf(sessions[i].name) >= 0){
+		var index = sites.indexOf(sessions[i].name)
+		if(index >= 0){
 			result[index].totalDuration += (sessions[i].end - sessions[i].start)
 			result[index].visits += 1
 			//result[index].sessions.push(sessions[i])			
