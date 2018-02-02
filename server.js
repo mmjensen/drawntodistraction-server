@@ -10,7 +10,11 @@ const app = express();
 
 console.log("Server running")
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({
+	parameterLimit: 100000,
+    limit: '50mb',
+    extended: true
+}))
 app.use(logger('dev'))
 
 mongodb.MongoClient.connect(url, (error, client) => {
@@ -44,7 +48,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			db.collection('sessions')
 			.insertMany(newSession.sessions, (error, results) => {
 				if (error){
-					return next(error)	
+					res.send(405)	
 				} 
 				res.send(results)
 			})
