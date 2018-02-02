@@ -40,7 +40,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 	app.post('/sessions', (req,res) => {
 		let newSession = req.body
-		if(req.body.userID){
+		if(newSession.userID && newSession.sessions){
 			db.collection('sessions')
 			.insertMany(newSession.sessions, (error, results) => {
 				if (error){
