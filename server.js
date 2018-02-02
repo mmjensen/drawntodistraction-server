@@ -91,7 +91,7 @@ function processSites(sessions){
 			newSite["totalDuration"] = sessions[i].end - sessions[i].start
 			newSite["visits"] = 1
 			//newSite["sessions"] = [sessions[i]]
-			results.push(newSite)
+			result.push(newSite)
 		}
 
 		return result
