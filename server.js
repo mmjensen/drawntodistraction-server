@@ -57,5 +57,45 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		}
 	})
 
+	app.get('/:cioid/sites', (req,res) => {
+		db.collection('sessions')
+		.find({userID:req.params.cioid})
+		.toArray((error, sessions) => {
+			if(error){
+				sendStatus(400)
+			}
+
+			let result = processSites(sessions)
+			res.send(result)
+
+		})
+	})
+
   	app.listen(3000)
 })
+
+function processSites(sessions){
+	let sites = []
+	let result = []
+
+	//Run through the sessions and bukcet them in sites
+	for(var i = 0; i < sessions.length; i++){
+		if(var index = sites.indexOf(sessions[i].name) >= 0){
+			result[index].totalDuration += (sessions[i].end - sessions[i].start)
+			result[index].visits += 1
+			//result[index].sessions.push(sessions[i])			
+		} else {
+			sites.push(sessions[i].name)
+			let newSite = {site:sessions[i].name}
+			newSite["totalDuration"] = sessions[i].end - sessions[i].start
+			newSite["visits"] = 1
+			//newSite["sessions"] = [sessions[i]]
+			results.push(newSite)
+		}
+
+		return result
+			
+	}
+
+}
+
