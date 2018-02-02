@@ -92,11 +92,10 @@ function processSites(sessions){
 			newSite["visits"] = 1
 			//newSite["sessions"] = [sessions[i]]
 			result.push(newSite)
-		}
-
-		return result
-			
+		}	
 	}
+
+	return result
 
 }
 
