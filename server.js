@@ -42,12 +42,14 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		let newSession = req.body
 		if(req.body.userID){
 			db.collection('sessions')
-			.insert(newSession, (error, results) => {
-				if (error) return next(error)
+			.insertMany(newSession.sessions, (error, results) => {
+				if (error){
+					return next(error)	
+				} 
 				res.send(results)
 			})
 		} else {
-			res.send("Illegal POST request")
+			res.sendStatus(400)
 		}
 	})
 
