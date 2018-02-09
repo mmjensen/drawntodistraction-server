@@ -25,7 +25,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 	var db = client.db('drawntodistraction')
 
-	app.get('/sessions/:id', (req, res) => {
+	app.get('/:id/sessions', (req, res) => {
 		if(!req.params.id){
 			console.log("No user ID provided!")
 			res.send("No user ID supplied")
