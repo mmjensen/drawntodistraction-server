@@ -34,6 +34,4 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			}) 
 		}
 	})
-
-	db.close()
 })
