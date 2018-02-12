@@ -60,18 +60,6 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		}
 	})
 
-	app.get('/sites', (req,res) => {
-		db.collection('sites')
-		.find()
-		.toArray(error, sites) => {
-			if(error){
-				sendStatus(400)
-			}
-
-			res.send(sites)
-		}
-	})
-
 	app.get('/:cioid/sites', (req,res) => {
 		db.collection('sessions')
 		.find({userID:req.params.cioid})
