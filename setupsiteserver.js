@@ -2,6 +2,8 @@ const mongodb= require('mongodb')
 
 const url = 'mongodb://localhost:27017'
 
+var sessions = []
+
 mongodb.MongoClient.connect(url, (error, client) => {
 	if (error){
 		console.log("CONNECTION ERROR")
@@ -13,31 +15,45 @@ mongodb.MongoClient.connect(url, (error, client) => {
 	db.collection("sessions").find({}).toArray((sessionError, sessionResult) => {
 		if (sessionError) throw sessionError;
 
-		for(var i = 0; i < sessionResult.length; i++){
-			let site = sessionResult[i].site
+		console.log(sessionResult)
 
-			let query = {"site":site}
+		sessions = sessionResult
 
-			console.log("query:" query)
+		var i = 0
 
-			db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
-				if(siteError) throw siteError;
+		recursiveAddToDB(i, db)
 
-				console.log(siteResult)
-
-				if(siteResult.length === 0){
-					let newsite = {"site":site}
-					db.collection("sites").insert(newsite, (insertError, insertResult) => {
-						if(insertError) throw insertError;
-
-						console.log(insertResult)
-
-					})
-				} else {
-					console.log("site exists")
-					//site already exists, do nothing		
-				}
-			}) 
-		}
 	})
 })
+
+
+function recursiveAddToDB(i, db){
+	if(i < sessions.length){
+		let site = sessions[i].site
+
+		let query = {"site":site}
+
+		console.log("site: " + site)
+		db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
+			if(siteError) throw siteError;
+
+			console.log(siteResult)
+
+			if(typeof siteResult !== 'undefined' && siteResult.length > 0){
+				console.log("site exists")
+				//site already exists, do nothing		
+				recursiveAddToDB(i+1, db)
+			} else {
+				let newsite = {"site":site}
+				db.collection("sites").insert(newsite, (insertError, insertResult) => {
+					if(insertError) throw insertError;
+
+					console.log(insertResult)
+					recursiveAddToDB(i+1, db)
+
+				})
+			}
+		})
+	} 
+		
+} 
