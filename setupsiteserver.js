@@ -16,13 +16,14 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		for(var i = 0; i < sessionResult.length; i++){
 			let site = sessionResult[i].site
 
-			db.collection("sites").find({"site":site}).toArray((siteError, siteResult) => {
+			let query = {"site":site}
+
+			db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
 				if(siteError) throw siteError;
 
-				if(typeof siteResult !== 'undefined' && siteResult.length > 0){
-					//site already exists in db
-					//do nothing?
-				} else {
+				console.log(siteResult)
+
+				if(siteResult.length === 0){
 					let newsite = {"site":site}
 					db.collection("sites").insert(newsite, (insertError, insertResult) => {
 						if(insertError) throw insertError;
@@ -30,6 +31,9 @@ mongodb.MongoClient.connect(url, (error, client) => {
 						console.log(insertResult)
 
 					})
+				} else {
+					console.log("site exists")
+					//site already exists, do nothing		
 				}
 			}) 
 		}
