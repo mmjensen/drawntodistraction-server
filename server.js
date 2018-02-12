@@ -60,6 +60,18 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		}
 	})
 
+	app.get('/sites', (req,res) => {
+		db.collection('sites')
+		.find()
+		.toArray(error, sites) => {
+			if(error){
+				sendStatus(400)
+			}
+
+			res.send(sites)
+		}
+	})
+
 	app.get('/:cioid/sites', (req,res) => {
 		db.collection('sessions')
 		.find({userID:req.params.cioid})
@@ -72,18 +84,6 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			res.send(result)
 
 		})
-	})
-
-	app.get('/sites', (req,res) => {
-		db.collection('sites')
-		.find()
-		.toArray(error, sites) => {
-			if(error){
-				sendStatus(400)
-			}
-
-			res.send(sites)
-		}
 	})
 
   	app.listen(3000)
@@ -121,7 +121,7 @@ function recursiveAddSite(i, db, session){
 		let query = {"site":site}
 
 		console.log("site: " + site)
-		db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
+		db.collection('sites').find(query).limit(1).toArray((siteError, siteResult) => {
 			if(siteError) throw siteError;
 
 			console.log(siteResult)
