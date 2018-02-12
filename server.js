@@ -74,6 +74,20 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		})
 	})
 
+	app.get('/sites', (req,res) => {
+		db.collection('sites')
+		.find()
+		.toArray((error, sites) => {
+			if(error){
+				sendStatus(400)
+			}
+
+			//let result = processSites(sessions)
+			res.send(sites)
+
+		})
+	})
+
   	app.listen(3000)
 })
 
@@ -117,14 +131,14 @@ function recursiveAddSite(i, db, session){
 			if(typeof siteResult !== 'undefined' && siteResult.length > 0){
 				console.log("site exists")
 				//site already exists, do nothing		
-				recursiveAddToDB(i+1, db, session)
+				recursiveAddSite(i+1, db, session)
 			} else {
 				let newsite = {"site":site}
 				db.collection("sites").insert(newsite, (insertError, insertResult) => {
 					if(insertError) throw insertError;
 
 					console.log(insertResult)
-					recursiveAddToDB(i+1, db, session)
+					recursiveAddSite(i+1, db, session)
 
 				})
 			}
