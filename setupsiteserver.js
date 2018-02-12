@@ -18,6 +18,8 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 			let query = {"site":site}
 
+			console.log("query:" query)
+
 			db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
 				if(siteError) throw siteError;
 
