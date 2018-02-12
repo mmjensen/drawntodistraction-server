@@ -51,7 +51,10 @@ mongodb.MongoClient.connect(url, (error, client) => {
 					res.send(405)	
 				} 
 				res.send(results)
+
+				recursiveAddSite(0,db,newSession.sessions)
 			})
+
 		} else {
 			res.sendStatus(400)
 		}
@@ -69,6 +72,18 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			res.send(result)
 
 		})
+	})
+
+	app.get('/sites', (req,res) => {
+		db.collection('sites')
+		.find()
+		.toArray(error, sites) => {
+			if(error){
+				sendStatus(400)
+			}
+
+			res.send(sites)
+		}
 	})
 
   	app.listen(3000)
@@ -99,3 +114,34 @@ function processSites(sessions){
 
 }
 
+function recursiveAddSite(i, db, session){
+	if(i < session.length){
+		let site = session[i].site
+
+		let query = {"site":site}
+
+		console.log("site: " + site)
+		db.collection("sites").find(query).limit(1).toArray((siteError, siteResult) => {
+			if(siteError) throw siteError;
+
+			console.log(siteResult)
+
+			if(typeof siteResult !== 'undefined' && siteResult.length > 0){
+				console.log("site exists")
+				//site already exists, do nothing		
+				recursiveAddToDB(i+1, db, session)
+			} else {
+				let newsite = {"site":site}
+				db.collection("sites").insert(newsite, (insertError, insertResult) => {
+					if(insertError) throw insertError;
+
+					console.log(insertResult)
+					recursiveAddToDB(i+1, db, session)
+
+				})
+			}
+		})
+	} 
+		
+} 
+		
