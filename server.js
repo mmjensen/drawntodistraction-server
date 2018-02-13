@@ -10,12 +10,24 @@ const app = express();
 
 console.log("Server running")
 
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'null');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    //console.log(req.headers)
+
+    next();
+}
+
 app.use(bodyParser.json({
 	parameterLimit: 100000,
     limit: '50mb',
     extended: true
 }))
 app.use(logger('dev'))
+app.use(allowCrossDomain)
+
 
 mongodb.MongoClient.connect(url, (error, client) => {
 	if (error){
@@ -87,6 +99,25 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 		})
 	})
+
+	app.post('/site', (req,res) => {
+		let newSite = req.body
+		if(newSite.userAuth === "1234" && newSite.site){
+			let query = {"site":newSite.site.site}
+
+			db.collection('sites')
+			.replace(query, newSession.site, (error, results) => {
+				if (error){
+					res.send(405)	
+				} 
+				res.send(results)
+			})
+
+		} else {
+			res.sendStatus(400)
+		}
+	})
+
 
   	app.listen(3000)
 })
