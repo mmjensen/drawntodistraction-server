@@ -12,7 +12,7 @@ console.log("Server running")
 
 const allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'null');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
     //console.log(req.headers)
@@ -102,6 +102,9 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 	app.post('/site', (req,res) => {
 		let newSite = req.body
+
+		console.log(newSite)
+
 		if(newSite.userAuth === "1234" && newSite.site){
 			let query = {"site":newSite.site.site}
 
