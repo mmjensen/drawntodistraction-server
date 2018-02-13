@@ -93,6 +93,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			if(error){
 				sendStatus(400)
 			}
+			console.log(sites[0])
 
 			//let result = processSites(sessions)
 			res.send(sites)
