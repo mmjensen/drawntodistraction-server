@@ -103,13 +103,11 @@ mongodb.MongoClient.connect(url, (error, client) => {
 	app.post('/sites', (req,res) => {
 		let newSite = req.body
 
-		console.log(newSite)
-
 		if(newSite.userAuth === "1234" && newSite.site){
 			let query = {"site":newSite.site.site}
 
 			db.collection('sites')
-			.replace(query, newSession.site, (error, results) => {
+			.replace(query, newSite.site, (error, results) => {
 				if (error){
 					res.send(405)	
 				} 
@@ -156,14 +154,10 @@ function recursiveAddSite(i, db, session){
 
 		let query = {"site":site}
 
-		console.log("site: " + site)
 		db.collection('sites').find(query).limit(1).toArray((siteError, siteResult) => {
 			if(siteError) throw siteError;
 
-			console.log(siteResult)
-
 			if(typeof siteResult !== 'undefined' && siteResult.length > 0){
-				console.log("site exists")
 				//site already exists, do nothing		
 				recursiveAddSite(i+1, db, session)
 			} else {
@@ -171,7 +165,6 @@ function recursiveAddSite(i, db, session){
 				db.collection("sites").insert(newsite, (insertError, insertResult) => {
 					if(insertError) throw insertError;
 
-					console.log(insertResult)
 					recursiveAddSite(i+1, db, session)
 
 				})
