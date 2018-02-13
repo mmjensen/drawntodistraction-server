@@ -107,7 +107,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			let query = {"site":newSite.site.site}
 
 			db.collection('sites')
-			.replace(query, newSite.site, (error, results) => {
+			.replaceOne(query, newSite.site, (error, results) => {
 				if (error){
 					res.send(405)	
 				} 
