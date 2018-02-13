@@ -88,7 +88,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 	app.get('/sites', (req,res) => {
 		db.collection('sites')
-		.find({},{'_id':0})
+		.find({},{'_id':'0'})
 		.toArray((error, sites) => {
 			if(error){
 				sendStatus(400)
