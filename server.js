@@ -100,7 +100,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		})
 	})
 
-	app.post('/site', (req,res) => {
+	app.post('/sites', (req,res) => {
 		let newSite = req.body
 
 		console.log(newSite)
