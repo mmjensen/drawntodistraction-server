@@ -87,7 +87,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 	})
 
 	app.get('/sites', (req,res) => {
-		let sort = {count : 1}
+		let sort = {count : -1}
 
 		db.collection('sites')
 		.find({},{_id:false})
