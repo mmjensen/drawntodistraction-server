@@ -46,7 +46,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 			var query = { userID: req.params.id };
 
 			db.collection('sessions')
-				.find(query,{'_id':0})
+				.find(query,{_id:0})
 				.toArray((error, sessions) => {
 					if (error) return next(error)
 						res.send(sessions)
@@ -74,7 +74,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 
 	app.get('/:cioid/sites', (req,res) => {
 		db.collection('sessions')
-		.find({userID:req.params.cioid},{'_id':0})
+		.find({userID:req.params.cioid},{_id:0})
 		.toArray((error, sessions) => {
 			if(error){
 				sendStatus(400)
@@ -90,7 +90,7 @@ mongodb.MongoClient.connect(url, (error, client) => {
 		let sort = {count : -1}
 
 		db.collection('sites')
-		.find({},{_id:false})
+		.find({},{_id:0})
 		.sort(sort)
 		.toArray((error, sites) => {
 			if(error){
