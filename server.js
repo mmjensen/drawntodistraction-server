@@ -87,8 +87,11 @@ mongodb.MongoClient.connect(url, (error, client) => {
 	})
 
 	app.get('/sites', (req,res) => {
+		let sort = {count : 1}
+
 		db.collection('sites')
-		.find({},{'_id':false})
+		.find({},{_id:false})
+		.sort(sort)
 		.toArray((error, sites) => {
 			if(error){
 				sendStatus(400)
@@ -159,10 +162,12 @@ function recursiveAddSite(i, db, session){
 			if(siteError) throw siteError;
 
 			if(typeof siteResult !== 'undefined' && siteResult.length > 0){
-				//site already exists, do nothing		
+				//site already exists, increment count
+				db.collection("sites").update({_id:siteResult[0]._id}, {$inc: { count: 1 }})
+
 				recursiveAddSite(i+1, db, session)
 			} else {
-				let newsite = {"site":site}
+				let newsite = {"site":site,"count":1}
 				db.collection("sites").insert(newsite, (insertError, insertResult) => {
 					if(insertError) throw insertError;
 
